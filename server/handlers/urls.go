@@ -93,3 +93,29 @@ func (dbHandler *UrlShortedHandler) RemoveUrl(c *gin.Context) {
 
 	log.Print("Removed URL from database")
 }
+
+func (dbHandler *UrlShortedHandler) GetAllUrls(c *gin.Context) {
+	cursor, err := dbHandler.Col.Find(context.Background(), bson.M{})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	defer cursor.Close(context.Background())
+
+	var results []models.ShortedURL
+	for cursor.Next(context.Background()) {
+		var record models.ShortedURL
+		if err := cursor.Decode(&record); err != nil {
+			log.Printf("Failed to decode record: %v", err)
+			continue
+		}
+		results = append(results, record)
+	}
+
+	if err := cursor.Err(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, results)
+}
