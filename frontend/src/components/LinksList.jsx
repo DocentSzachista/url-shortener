@@ -30,7 +30,7 @@ export default function LinksList() {
         </thead>
         <tbody>
           {links.map(link => (
-            <LinkItem key={link.shortedId} originalUrl={link.Url} shortUrl={`${HOSTNAME}/${link.ShortedId}`} visitsNumber={link.Visits} />
+            <LinkItem key={link.shortedId} originalUrl={link.url} shortUrl={`${HOSTNAME}/${link.shortedId}`} visitsNumber={link.Visits} />
           ))}
         </tbody>
       </table>

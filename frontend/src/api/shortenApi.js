@@ -2,7 +2,7 @@ export async function shortenUrl(url, customShort) {
   const body = { url };
   if (customShort) body.customShort = customShort;
 
-  const res = await fetch("http://localhost:8080/add", {
+  const res = await fetch("http://localhost:8080/addShort", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body)
