@@ -12,6 +12,7 @@ type URL struct {
 type ShortedURL struct {
 	Url       string `json:"url" bson:"url"`
 	ShortedId string `json:"shortedId" bson:"shortedID"`
+	Clicks    int    `json:"clicks" bson:"clicks"`
 }
 
 type VisitedTimestamp struct {

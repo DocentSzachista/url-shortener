@@ -21,7 +21,7 @@ func main() {
 
 	client := makeConnectionToDB()
 	handler := handlers.NewShortedURLHandler(client.Database("urls"))
-
+	observeHandler := handlers.NewObservabilityHandler(client)
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:3000"}, // Twój frontend
@@ -37,6 +37,8 @@ func main() {
 	r.POST("/addShort", handler.AddShortURL)
 	r.DELETE("/deleteShort/:id", handler.RemoveUrl)
 	r.Run("localhost:8080")
+	r.GET("/health/liveness", observeHandler.IsAvailable)
+	r.GET("/health/readiness", observeHandler.IsReady)
 }
 
 func makeConnectionToDB() *mongo.Client {

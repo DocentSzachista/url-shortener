@@ -39,9 +39,12 @@ func (service *UrlService) FindRedirection(shortedParam string, sourceIp string)
 	}
 
 	_, insertErr := service.statsCol.InsertOne(context.Background(), mark)
-
+	_, updateErr := service.urlCol.UpdateOne(context.Background(), bson.M{"shortedID": shortedParam}, bson.M{"$inc": bson.M{"clicks": 1}})
 	if insertErr != nil {
 		return "", insertErr
+	}
+	if updateErr != nil {
+		return "", updateErr
 	}
 
 	return record.Url, nil
@@ -63,6 +66,7 @@ func (service *UrlService) InsertShort(urlToInsert models.URL) (*models.ShortedU
 	shortedUrl := models.ShortedURL{
 		Url:       *urlToInsert.Url,
 		ShortedId: *urlToInsert.ShortedId,
+		Clicks:    0,
 	}
 	_, insertErr := service.urlCol.InsertOne(context.TODO(), shortedUrl)
 
